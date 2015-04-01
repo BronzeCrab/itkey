@@ -17,7 +17,9 @@ date_var=$(date +%g%m%d-%H%M)
 echo $date_var
 
 #Изменяю переменную с именем архива
-var1="${var1/".tar"/""}"
+var1=$(echo $var1 | sed s/.tar$//)
+# Плохой вариант редактирования подстроки 
+# var1="${var1/".tar"/""}"
 var1="$var1.$date_var.tar"
 echo $var1
 
