@@ -18,8 +18,10 @@ if [[ $# < 3 ]]; then
 elif [[ ! -f /etc/bind/zones/${DOMAIN}.db ]]; then
 	echo Файла c зонами не существует
 	exit 1
-elif [[]]; then
-	
+elif [[ echo ${HOST} | grep -o "\." | wc -l != 3 ]]; then
+	echo Неправильно введен ip
+	exit 1
+
 fi
 
 

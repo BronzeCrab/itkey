@@ -10,4 +10,17 @@ elif [[ ! -f /home/gr4k/my_scripts/lol.sh ]]; then
 else
 	echo все ништяк и файл есть
 fi
-echo end 	
+echo end 
+
+
+
+var1=$(echo $var1 | sed s/.tar$//)
+
+#Пример использования sed'a
+#var1=$(echo $var1 | sed s/.tar$//)	
+
+HOST=10.10.10.10.
+if [[ `echo ${HOST} | grep -o "\." | wc -l` != 3 ]]; then 
+	echo Неправильно введен ip
+	exit 1
+fi
