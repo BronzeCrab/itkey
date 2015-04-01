@@ -28,3 +28,4 @@ var2=$2
 echo $var2
 
 tar -cf $var1 $var2
+# Коммент снизу
