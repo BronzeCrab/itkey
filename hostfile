@@ -1,0 +1,6 @@
+# cat hostfile
+test.example.com 10.1.1.1
+test2.example.com 10.1.1.2
+server.example.com 10.5.6.7.5
+server.uk.example.com 12.5.6.7
+server2.uk.example.com 8.5.2.5 delete
