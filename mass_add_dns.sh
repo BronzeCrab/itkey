@@ -14,14 +14,9 @@ HOSTFILE=$1
 
 while read line
 do  
-
     HOSTNAME=$(echo $line | awk '{print $1}')
     IP=$(echo $line | awk '{print $2}')
-    if [[ $(echo $HOSTNAME | grep -o "\." | wc -l) -eq 2 ]]; then
-    	DOMAIN=$(echo $HOSTNAME | cut -d'.' -f2-)
-    else
-    	DOMAIN=$(echo $HOSTNAME | cut -d'.' -f3-)
-    fi	
+    DOMAIN=$(echo $HOSTNAME | grep -o "[^\.]*\.[^\.]*$")	
     LABEL=$(echo $line | awk '{print $3}')
     
     if [[ $LABEL != "" ]]; then
@@ -30,3 +25,12 @@ do
     	./add_record.sh $HOSTNAME $IP $DOMAIN 
     fi 
 done < $HOSTFILE
+
+
+
+
+ # if [[ $(echo $HOSTNAME | grep -o "\." | wc -l) -eq 2 ]]; then
+ #    	DOMAIN=$(echo $HOSTNAME | cut -d'.' -f2-)
+ #    else
+ #    	DOMAIN=$(echo $HOSTNAME | cut -d'.' -f3-)
+ #    fi	

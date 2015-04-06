@@ -54,14 +54,14 @@ elif [[ ip_valid -eq 1 ]]; then
 	exit 1
 fi
 
-if [ "$MODE" == "1" ]; then
-    if grep -xq "${RECORD}" /etc/bind/${DOMAIN}.db; then
+if [[ "$MODE" == "1" ]]; then
+    if [[ `grep "${RECORD}" /etc/bind/${DOMAIN}.db` != "" ]]; then
     	sed -i 's/'"$RECORD"'//g' /etc/bind/${DOMAIN}.db
     	echo Успешно удалили запись $RECORD
     else
     	echo Не найдена запись $RECORD, не удалена
     fi	
-elif [ "$(cat /etc/bind/${DOMAIN}.db | grep "${RECORD}")" == "" ]; then
+elif [[ "$(cat /etc/bind/${DOMAIN}.db | grep "${RECORD}")" == "" ]]; then
     echo -e $RECORD >> /etc/bind/${DOMAIN}.db
     echo Успешно добавлена запись $RECORD
 else
