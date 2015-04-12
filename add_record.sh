@@ -12,36 +12,45 @@ RECORD="${HOST} IN A ${IP}"
 # validate ip
 # add error handling
 
-# Функция для проверки IP. Сначала регулярным проверяю на то , что все элементы либо цифры 
-# либо точки, а затем уже значения октетов, чтобы не было больше 255
+# function ip_test() {
+# 	temp=""
+#     ip_valid=0
+#     if [[ `echo ${IP} | sed 's/\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}//g'` == "" ]]; then
+# 		for (( i=0; i<${#IP}; i++ )); do
+# 		    if [[ ${IP:$i:1} == "." ]]; then
+# 		  		if [[ $temp -gt 255 ]]; then
+# 		  			ip_valid=1
+# 		  		fi
+# 		  		temp=""
+# 		  	elif [[ $i == $[${#IP}-1] ]]; then
+# 		  		temp=$temp${IP:$i:1}
+# 		  		if [[ $temp -gt 255 ]]; then
+# 		  			ip_valid=1
+# 		  		fi
+# 		  	else
+# 		  		temp=$temp${IP:$i:1}
+# 		  	fi
+# 		done
+# 	else
+# 		ip_valid=1
+# 	fi
+# }
 
-function ip_test() {
-	temp=""
-    ip_valid=0
-    if [[ `echo ${IP} | sed 's/\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}//g'` == "" ]]; then
-		for (( i=0; i<${#IP}; i++ )); do
-		    if [[ ${IP:$i:1} == "." ]]; then
-		  		if [[ $temp -gt 255 ]]; then
-		  			ip_valid=1
-		  		fi
-		  		temp=""
-		  	elif [[ $i == $[${#IP}-1] ]]; then
-		  		temp=$temp${IP:$i:1}
-		  		if [[ $temp -gt 255 ]]; then
-		  			ip_valid=1
-		  		fi
-		  	else
-		  		temp=$temp${IP:$i:1}			
-		  	fi
-		done
-	else
-		ip_valid=1
-	fi	
+function ip_test2() {
+  count=0
+  for octet in $(echo $1 | sed 's/\./ /g'); do
+          if [[ $octet -gt 255 || ! $octet =~ ^[0-9]+$ ]]; then
+      return 1
+          fi
+          let count=$count+1
+  done
+
+  if [[ $count != 4 ]]; then
+    return 1
+  fi
 }
 
-ip_test
-
-# Проверка остальных входных параметров 
+# Проверка остальных входных параметров
 
 if [[ $# -lt 3 ]]; then
 	echo Слишком мало параметров!
@@ -49,7 +58,11 @@ if [[ $# -lt 3 ]]; then
 elif [[ ! -f /etc/bind/${DOMAIN}.db ]]; then
 	echo Файла c зонами не существует, запись $RECORD не добавлена
 	exit 1
-elif [[ ip_valid -eq 1 ]]; then
+fi
+
+if ip_test2 ${IP}; then
+	:
+else
 	echo Неправильно введен IP, запись $RECORD не добавлена
 	exit 1
 fi
@@ -60,7 +73,7 @@ if [[ "$MODE" == "1" ]]; then
     	echo Успешно удалили запись $RECORD
     else
     	echo Не найдена запись $RECORD, не удалена
-    fi	
+    fi
 elif [[ "$(cat /etc/bind/${DOMAIN}.db | grep "${RECORD}")" == "" ]]; then
     echo -e $RECORD >> /etc/bind/${DOMAIN}.db
     echo Успешно добавлена запись $RECORD
