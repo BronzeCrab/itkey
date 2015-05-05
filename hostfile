@@ -1,5 +1,5 @@
-test.example.com 10.1.1.1 d
-test2.example.com 10.1.1.2 d
+test.example.com 10.1.1.1 c
+test2.example.com 10.1.1.2 
 server.example.com 10.5.6.7.5
-server.uk.example.com 12.5.6.7 d
-server2.uk.example.com 8.5.2.5 d
+server.uk.example.com 12.5.6.7
+server2.uk.example.com 8.5.2.5 c
